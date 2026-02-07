@@ -8,6 +8,9 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 
+# FIX QUYỀN CHO mvnw
+RUN chmod +x mvnw
+
 # download deps (cache)
 RUN ./mvnw dependency:go-offline
 
