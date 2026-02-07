@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: history-service
+
+server:
+  port: ${PORT:8080}
+
+ai:
+  service:
+    # URL mặc định khi không có biến môi trường AI_BASE_URL
+    url: ${AI_BASE_URL:https://vietnamhistorydataset-production-b6fe.up.railway.app}
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          reactive:
+            function:
+              client:
+                WebClient: DEBUG
