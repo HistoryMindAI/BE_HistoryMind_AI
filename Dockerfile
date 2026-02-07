@@ -8,17 +8,16 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 
-# FIX QUYỀN CHO mvnw
 RUN chmod +x mvnw
 
-# download deps (cache)
+# cache dependencies
 RUN ./mvnw dependency:go-offline
 
 # copy source & build
 COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
-# Find the correct jar (excluding .original) and copy it to a safe location outside target/ to avoid self-reference in find
+# copy final jar (exclude .original)
 RUN find target -name "*.jar" ! -name "*.original" -exec cp {} app.jar \;
 
 
@@ -27,10 +26,8 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-# Copy the jar to target/app.jar to support both default ENTRYPOINT and user's custom start command (java -jar target/*.jar)
-# Also create target directory explicitly
-RUN mkdir -p target
-COPY --from=build /build/app.jar target/app.jar
+COPY --from=build /build/app.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","target/app.jar"]
+
+ENTRYPOINT ["java","-jar","/app/app.jar"]
