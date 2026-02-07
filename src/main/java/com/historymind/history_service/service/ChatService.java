@@ -8,20 +8,22 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class ChatService {
+
     private final WebClient webClient;
 
-    public ChatService(WebClient.Builder webClientBuilder) {
-        // Build WebClient từ Builder được tiêm vào
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8000").build();
+    public ChatService(WebClient aiWebClient) {
+        this.webClient = aiWebClient;
     }
 
     public Mono<ChatResponse> processChat(String query) {
         return webClient.post()
-                .uri("/chat")
+                .uri("/api/chat")
                 .bodyValue(new ChatRequest(query))
                 .retrieve()
-                .onStatus(status -> status.isError(), clientResponse ->
-                        Mono.error(new RuntimeException("FastAPI Service Error")))
+                .onStatus(
+                        status -> status.isError(),
+                        response -> Mono.error(new RuntimeException("AI Service Error"))
+                )
                 .bodyToMono(ChatResponse.class);
     }
 }
