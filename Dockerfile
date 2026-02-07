@@ -1,14 +1,27 @@
-# Base image: Java 21 JRE (nhẹ, chuẩn)
+# ====== STAGE 1: BUILD ======
+FROM eclipse-temurin:21-jdk AS build
+
+WORKDIR /build
+
+# copy maven wrapper & config
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+
+# download deps (cache)
+RUN ./mvnw dependency:go-offline
+
+# copy source & build
+COPY src ./src
+RUN ./mvnw clean package -DskipTests
+
+
+# ====== STAGE 2: RUN ======
 FROM eclipse-temurin:21-jre
 
-# Thư mục chạy app
 WORKDIR /app
 
-# Copy jar vào container
-COPY target/history-service-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /build/target/*.jar app.jar
 
-# Expose port (Spring Boot default)
 EXPOSE 8080
-
-# Run app
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
