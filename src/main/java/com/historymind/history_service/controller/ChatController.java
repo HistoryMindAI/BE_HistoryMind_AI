@@ -1,5 +1,6 @@
 package com.historymind.history_service.controller;
 
+import com.historymind.history_service.dto.ChatRequest;
 import com.historymind.history_service.dto.ChatResponse;
 import com.historymind.history_service.service.ChatService;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,9 @@ public class ChatController {
     }
 
     @PostMapping("/ask")
-    public Mono<ResponseEntity<ChatResponse>> askHistory(@RequestBody String query) {
-        return chatService.processChat(query)
-                .map(response -> ResponseEntity.ok(response))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+    public Mono<ResponseEntity<ChatResponse>> askHistory(
+            @RequestBody ChatRequest request) {
+        return chatService.processChat(request.getQuery())
+                .map(ResponseEntity::ok);
     }
 }
