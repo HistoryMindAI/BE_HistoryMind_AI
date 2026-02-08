@@ -18,20 +18,21 @@ public class ChatService {
     }
 
     public Mono<ChatResponse> processChat(String query) {
-        log.info("Sending query to AI service: {}", query);
+        log.info("➡️ Sending query to AI service: {}", query);
+
         return webClient.post()
                 .uri("/api/chat")
                 .bodyValue(new ChatRequest(query))
                 .retrieve()
                 .onStatus(
                         status -> status.isError(),
-                        response -> {
-                            log.error("AI Service returned error status: {}", response.statusCode());
-                            return response.createException()
-                                           .flatMap(e -> Mono.error(new RuntimeException("AI Service Error: " + response.statusCode(), e)));
-                        }
+                        response -> response.createException()
+                                .flatMap(e -> Mono.error(
+                                        new RuntimeException("AI Service Error: " + response.statusCode(), e)
+                                ))
                 )
                 .bodyToMono(ChatResponse.class)
-                .doOnError(e -> log.error("Error during AI service call", e));
+                .doOnSuccess(r -> log.info("✅ AI response received"))
+                .doOnError(e -> log.error("❌ Error calling AI service", e));
     }
 }
