@@ -183,13 +183,13 @@ public class ChatServiceTest {
     void processChat_Timeout() {
         // Simulate a slow response
         mockWebServer.enqueue(new MockResponse()
-                .setBodyDelay(10, TimeUnit.SECONDS)
+                .setBodyDelay(500, TimeUnit.MILLISECONDS)
                 .setBody("{}"));
 
         Mono<ChatResponse> result = chatService.processChat("query");
 
         // Should timeout (default WebClient timeout)
-        StepVerifier.create(result.timeout(java.time.Duration.ofSeconds(2)))
+        StepVerifier.create(result.timeout(java.time.Duration.ofMillis(200)))
                 .expectError()
                 .verify();
     }
