@@ -4,7 +4,6 @@ import com.historymind.history_service.dto.ChatRequest;
 import com.historymind.history_service.dto.ChatResponse;
 import com.historymind.history_service.service.ChatService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,6 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChatController.class)
 public class ChatControllerTest {
@@ -26,16 +26,17 @@ public class ChatControllerTest {
     private ChatService chatService;
 
     @Test
-    public void testAskHistory() {
+    public void askHistory_Success() {
         ChatResponse mockResponse = new ChatResponse();
-        mockResponse.setQuery("Hello");
-        mockResponse.setAnswer("Hi there");
+        mockResponse.setQuery("query");
+        mockResponse.setIntent("intent");
+        mockResponse.setAnswer("answer");
         mockResponse.setEvents(Collections.emptyList());
+        mockResponse.setNoData(false);
 
-        Mockito.when(chatService.processChat(anyString()))
-                .thenReturn(Mono.just(mockResponse));
+        when(chatService.processChat(anyString())).thenReturn(Mono.just(mockResponse));
 
-        ChatRequest request = new ChatRequest("Hello");
+        ChatRequest request = new ChatRequest("query");
 
         webTestClient.post()
                 .uri("/api/v1/chat/ask")
@@ -43,9 +44,24 @@ public class ChatControllerTest {
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(ChatResponse.class)
-                .value(response -> {
-                    assert response.getAnswer().equals("Hi there");
-                });
+                .expectBody()
+                .jsonPath("$.query").isEqualTo("query")
+                .jsonPath("$.intent").isEqualTo("intent")
+                .jsonPath("$.answer").isEqualTo("answer")
+                .jsonPath("$.noData").isEqualTo(false);
+    }
+
+    @Test
+    public void askHistory_EmptyResponse() {
+        when(chatService.processChat(anyString())).thenReturn(Mono.empty());
+
+        ChatRequest request = new ChatRequest("query");
+
+        webTestClient.post()
+                .uri("/api/v1/chat/ask")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 }
