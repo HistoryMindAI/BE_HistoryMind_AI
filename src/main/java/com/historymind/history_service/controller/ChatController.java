@@ -19,10 +19,16 @@ public class ChatController {
 
     @PostMapping("/ask")
     public Mono<ResponseEntity<ChatResponse>> askHistory(
+<<<<<<< HEAD
             @RequestBody ChatRequest request
     ) {
         return chatService.processChat(request.getQuery())
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
+=======
+            @RequestBody ChatRequest request) {
+        return chatService.processChat(request.getQuery())
+                .map(ResponseEntity::ok);
+>>>>>>> ef010b12a6cae4c580f9cd51be07070aa36cfe50
     }
 }
