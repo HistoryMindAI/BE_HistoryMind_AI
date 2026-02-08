@@ -1,11 +1,7 @@
 # Railway Configuration for Spring Boot Backend
 # This file configures Railway deployment
 
-[build]
-builder = "nixpacks"
-
 [deploy]
-startCommand = "java -jar /app/app.jar --server.port=$PORT"
 healthcheckPath = "/ping"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
