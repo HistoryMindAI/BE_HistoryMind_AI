@@ -50,8 +50,10 @@ jobs:
       - name: Build production JAR
         run: mvn package -DskipTests --batch-mode
       
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
       - name: Deploy to Railway
-        uses: bervProject/railway-deploy@main
-        with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          service: be-history-mind
+        run: railway up --service be-history-mind --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
