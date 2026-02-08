@@ -18,9 +18,11 @@ public class ChatController {
     }
 
     @PostMapping("/ask")
-    public Mono<ResponseEntity<ChatResponse>> askHistory(@RequestBody ChatRequest request) {
+    public Mono<ResponseEntity<ChatResponse>> askHistory(
+            @RequestBody ChatRequest request
+    ) {
         return chatService.processChat(request.getQuery())
-                .map(response -> ResponseEntity.ok(response))
+                .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }

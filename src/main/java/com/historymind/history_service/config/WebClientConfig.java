@@ -8,18 +8,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${ai.service.url}")
-    private String aiServiceUrl;
-
     @Bean
-    public WebClient aiWebClient(WebClient.Builder builder) {
-        return builder
+    public WebClient aiWebClient(
+            @Value("${ai.service.url}") String aiServiceUrl
+    ) {
+        return WebClient.builder()
                 .baseUrl(aiServiceUrl)
                 .build();
-    }
-
-    @Bean
-    public WebClient.Builder webClientBuilder() {
-        return WebClient.builder();
     }
 }

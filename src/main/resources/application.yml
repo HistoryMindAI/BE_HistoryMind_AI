@@ -7,15 +7,9 @@ server:
 
 ai:
   service:
-    # URL mặc định khi không có biến môi trường AI_BASE_URL
     url: ${AI_BASE_URL:https://vietnamhistorydataset-production.up.railway.app}
 
 logging:
   level:
-    org:
-      springframework:
-        web:
-          reactive:
-            function:
-              client:
-                WebClient: DEBUG
+    root: INFO
+    org.springframework.web.reactive.function.client.WebClient: DEBUG
