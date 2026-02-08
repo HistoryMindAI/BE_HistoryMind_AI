@@ -1,5 +1,6 @@
 package com.historymind.history_service.controller;
 
+import com.historymind.history_service.dto.ChatRequest;
 import com.historymind.history_service.dto.ChatResponse;
 import com.historymind.history_service.service.ChatService;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,6 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/chat")
-@CrossOrigin(origins = "*") // Cho phép các domain khác gọi vào
 public class ChatController {
 
     private final ChatService chatService;
@@ -18,8 +18,8 @@ public class ChatController {
     }
 
     @PostMapping("/ask")
-    public Mono<ResponseEntity<ChatResponse>> askHistory(@RequestBody String query) {
-        return chatService.processChat(query)
+    public Mono<ResponseEntity<ChatResponse>> askHistory(@RequestBody ChatRequest request) {
+        return chatService.processChat(request.getQuery())
                 .map(response -> ResponseEntity.ok(response))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
