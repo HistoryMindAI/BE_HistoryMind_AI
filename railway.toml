@@ -6,7 +6,7 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "java -jar /app/app.jar --server.port=$PORT"
-healthcheckPath = "/actuator/health"
+healthcheckPath = "/ping"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3

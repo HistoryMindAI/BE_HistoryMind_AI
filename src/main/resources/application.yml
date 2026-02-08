@@ -1,9 +1,22 @@
 spring:
   application:
     name: history-service
+  main:
+    web-application-type: reactive
 
 server:
   port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
 
 ai:
   service:
@@ -12,4 +25,5 @@ ai:
 logging:
   level:
     root: INFO
+    org.springframework.web: DEBUG
     org.springframework.web.reactive.function.client.WebClient: DEBUG
