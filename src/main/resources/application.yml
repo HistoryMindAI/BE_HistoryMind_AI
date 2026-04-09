@@ -21,9 +21,18 @@ management:
 ai:
   service:
     url: ${AI_BASE_URL:https://vietnamhistorydataset-production.up.railway.app}
+    connect-timeout-ms: ${AI_CONNECT_TIMEOUT_MS:3000}
+    response-timeout-seconds: ${AI_RESPONSE_TIMEOUT_SECONDS:20}
+    read-timeout-seconds: ${AI_READ_TIMEOUT_SECONDS:20}
+    write-timeout-seconds: ${AI_WRITE_TIMEOUT_SECONDS:20}
+    pending-acquire-timeout-seconds: ${AI_PENDING_ACQUIRE_TIMEOUT_SECONDS:5}
+    max-idle-time-seconds: ${AI_MAX_IDLE_TIME_SECONDS:30}
+    max-life-time-seconds: ${AI_MAX_LIFE_TIME_SECONDS:300}
+    max-connections: ${AI_MAX_CONNECTIONS:200}
+    max-in-memory-size-mb: ${AI_MAX_IN_MEMORY_SIZE_MB:4}
 
 logging:
   level:
     root: INFO
-    org.springframework.web: DEBUG
-    org.springframework.web.reactive.function.client.WebClient: DEBUG
+    org.springframework.web: INFO
+    org.springframework.web.reactive.function.client.WebClient: INFO
