@@ -110,6 +110,23 @@ Cấu hình qua `application.properties`:
 ai.service.url=http://localhost:8000
 ```
 
+### WebClient chịu tải
+
+Backend sử dụng `WebClient` với connection pool và timeout để tránh giữ request vô hạn khi AI Service chậm hoặc quá tải.
+
+Các env có thể tinh chỉnh:
+```properties
+AI_CONNECT_TIMEOUT_MS=3000
+AI_RESPONSE_TIMEOUT_SECONDS=20
+AI_READ_TIMEOUT_SECONDS=20
+AI_WRITE_TIMEOUT_SECONDS=20
+AI_PENDING_ACQUIRE_TIMEOUT_SECONDS=5
+AI_MAX_IDLE_TIME_SECONDS=30
+AI_MAX_LIFE_TIME_SECONDS=300
+AI_MAX_CONNECTIONS=200
+AI_MAX_IN_MEMORY_SIZE_MB=4
+```
+
 ---
 
 ## 🛠 Cài đặt & Chạy
